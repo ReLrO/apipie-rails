@@ -154,16 +154,17 @@ module Apipie
       def update_api_descriptions
         apis_from_docs = all_apis_from_docs
         @apis_from_routes.each do |(controller, action), new_apis|
-          puts "Controller name: #{controller}"
-          method_key = "#{Apipie.get_resource_name(controller.constantize)}##{action}"
-          old_apis = apis_from_docs[method_key] || []
-          new_apis.each do |new_api|
-            new_api[:path].sub!(/\(\.:format\)$/,"")
-            old_api = old_apis.find do |api|
-              api[:path] == "#{@api_prefix}#{new_api[:path]}"
-            end
-            if old_api
-              new_api[:desc] = old_api[:desc]
+          if  controller != " Api::V0::PasswordsController"
+            method_key = "#{Apipie.get_resource_name(controller.constantize)}##{action}"
+            old_apis = apis_from_docs[method_key] || []
+            new_apis.each do |new_api|
+              new_api[:path].sub!(/\(\.:format\)$/,"")
+              old_api = old_apis.find do |api|
+                api[:path] == "#{@api_prefix}#{new_api[:path]}"
+              end
+              if old_api
+                new_api[:desc] = old_api[:desc]
+              end
             end
           end
         end
